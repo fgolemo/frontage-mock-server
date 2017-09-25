@@ -1,5 +1,5 @@
 {
-  "name": "node-js-getting-started",
+  "name": "frontage-mock-server",
   "version": "0.2.6",
   "description": "A sample Node.js app using Express 4",
   "engines": {
@@ -18,10 +18,10 @@
     "request": "^2.81.0",
     "tape": "^4.7.0"
   },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/heroku/node-js-getting-started"
-  },
+//  "repository": {
+//    "type": "git",
+//    "url": "https://github.com/heroku/node-js-getting-started"
+//  },
   "keywords": [
     "node",
     "heroku",
