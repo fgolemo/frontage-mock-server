@@ -17,8 +17,6 @@ app.get('/', function(req, res) {
     res.send('Hello! The API is at http://localhost:' + port + '/api');
 });
 
-app.use("/b", backend);
-
 app.post("/b/login", function (req, res) {
     console.log("user:",req.body.username);
     console.log("pass:",req.body.password);
@@ -33,6 +31,8 @@ app.post("/b/login", function (req, res) {
     });
 
 });
+
+app.use("/b", backend);
 
 
 app.listen(port, function() {
