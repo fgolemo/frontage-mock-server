@@ -1,11 +1,14 @@
 var express = require('express');
 var app = express();
+var cors = require('cors');
+
 var backend = require("./backend");
 var jwt    = require('jsonwebtoken');
 var bodyParser  = require('body-parser');
 
 var port = (process.env.PORT || 5000);
 
+app.use(cors());
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
@@ -18,6 +21,7 @@ app.get('/', function(req, res) {
 });
 
 app.post("/b/login", function (req, res) {
+    console.log(req.query);
     console.log(req.body);
     console.log("user:",req.body.username);
     console.log("pass:",req.body.password);
@@ -26,11 +30,17 @@ app.post("/b/login", function (req, res) {
         expiresIn: "1d" // expires in 24 hours
     });
 
+    if (req.body.username !== "root") {
+        res.json({
+            error: 100
+        });
+        return;
+    }
+
     res.json({
         error: 0,
         token: token
     });
-
 });
 
 app.use("/b", backend);

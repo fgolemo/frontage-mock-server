@@ -43,21 +43,25 @@ var facade = {
 };
 
 backend.get("/admin/is_on", function (req, res) {
-    res.json({on: facade.is_on});
+    res.json({error: 0, on: facade.is_on});
 });
 
 backend.post("/admin/is_on", function (req, res) {
-    facade.is_on = bool.valueOf(req.body.on);
-    res.json({error: 0});
+    console.log("turning facade "+(req.body.on?"on":"off"));
+    facade.is_on = (req.body.on);
+    res.json({error: 0, on: facade.is_on});
 });
 
 backend.get("/admin/cal", function (req, res) {
-    res.json({
-        on: "20:00",
-        off: "23:30",
-        default: "flag",
-        params: {"country": "FR", "brightness": 50}
-    });
+    setTimeout(function () {
+        res.json({
+            error: 0,
+            on: "20:00",
+            off: "23:30",
+            default: "flag",
+            params: {"country": "FR", "brightness": 50}
+        });
+    }, 1000);
 });
 
 backend.post("/admin/cal", function (req, res) {
@@ -67,7 +71,8 @@ backend.post("/admin/cal", function (req, res) {
 
 backend.get("/admin/apps", function (req, res) {
     res.json({
-        "apps": [
+        error: 0,
+        apps: [
             {
                 "name": "flag",
                 "params": {
@@ -85,33 +90,44 @@ backend.get("/admin/apps", function (req, res) {
     });
 });
 
-var app = {
+var current_date = new Date();
+// current_date.setMinutes(current_date.getMinutes() - 5);
+
+var current_app = {
     name: "flag",
     params: {"country": "FR", "brightness": 50},
-    start: "2017-08-22T20:00:00+01:00",
+    start: current_date,
     user: "cal"
 };
 
 backend.get("/admin/apps/running", function (req, res) {
-    res.json(app);
+    setTimeout(function () {
+        if (facade.is_on) {
+            res.json({error: 0, data: current_app});
+        } else {
+            res.json({error: 0, data: empty_app});
+        }
+    }, 1500);
 });
 
 backend.put("/admin/apps/running", function (req, res) {
-    app.name = req.body.name;
-    app.params = req.body.params;
-    app.start = req.body.start;
-    app.user = req.body.user;
-    res.json({error: 0});
+    current_app.name = req.body.name;
+    current_app.params = req.body.params;
+    current_app.start = req.body.start;
+    current_app.user = req.body.user;
+    res.json({error: 0, data: current_app});
 });
 
-backend.get("/admin/apps/running", function (req, res) {
-    app = {
-        name: "",
-        params: {},
-        start: "",
-        user: ""
-    };
-    res.json({error: 0});
+var empty_app = {
+    name: "",
+    params: {},
+    start: "",
+    user: ""
+};
+
+backend.delete("/admin/apps/running", function (req, res) {
+    current_app = JSON.parse(JSON.stringify(empty_app));
+    res.json({error: 0, data: current_app});
 });
 
 // backend.get("", function (req, res) {
