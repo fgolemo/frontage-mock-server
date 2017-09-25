@@ -1,21 +1,40 @@
 var express = require('express');
 var app = express();
 var backend = require("./backend");
+var jwt    = require('jsonwebtoken');
+var bodyParser  = require('body-parser');
 
-app.set('port', (process.env.PORT || 5000));
+var port = (process.env.PORT || 5000);
 
-// app.use(express.static(__dirname + '/public'));
 
-// views is directory for all template files
-app.set('views', __dirname + '/views');
-app.set('view engine', 'ejs');
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
 
-app.get('/', function(request, response) {
-  response.render('pages/index');
+app.set('port', port);
+app.set('superSecret', "superSecret123");
+
+app.get('/', function(req, res) {
+    res.send('Hello! The API is at http://localhost:' + port + '/api');
 });
 
 app.use("/b", backend);
 
-app.listen(app.get('port'), function() {
-  console.log('Node app is running on port', app.get('port'));
+app.post("/b/login", function (req, res) {
+    console.log("user:",req.body.username);
+    console.log("pass:",req.body.password);
+
+    var token = jwt.sign({username: req.body.username}, app.get('superSecret'), {
+        expiresIn: "1d" // expires in 24 hours
+    });
+
+    res.json({
+        error: 0,
+        token: token
+    });
+
+});
+
+
+app.listen(port, function() {
+  console.log('Node app is running on port', port);
 });
