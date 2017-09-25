@@ -18,6 +18,7 @@ app.get('/', function(req, res) {
 });
 
 app.post("/b/login", function (req, res) {
+    console.log(req.body);
     console.log("user:",req.body.username);
     console.log("pass:",req.body.password);
 
