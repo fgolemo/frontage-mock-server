@@ -47,7 +47,7 @@ backend.get("/admin/is_on", function (req, res) {
 });
 
 backend.post("/admin/is_on", function (req, res) {
-    console.log("turning facade "+(req.body.on?"on":"off"));
+    console.log("turning facade " + (req.body.on ? "on" : "off"));
     facade.is_on = (req.body.on);
     res.json({error: 0, on: facade.is_on});
 });
@@ -72,19 +72,19 @@ backend.post("/admin/cal", function (req, res) {
 backend.get("/admin/apps", function (req, res) {
     res.json({
         error: 0,
-        apps: [
+        data: [
             {
                 "name": "flag",
-                "params": {
-                    "country": "ISO 3166-1 country code, 2 letters",
-                    "brightness": "Brightness level of the flag, range 0-100"
-                }
+                "params": [
+                    {name: "country", desc: "ISO 3166-1 country code, 2 letters"},
+                    {name: "brightness", desc: "Brightness level of the flag, range 0-100"}
+                ]
             },
             {
                 "name": "emoji",
-                "params": {
-                    "emoji": "Typed emoji, like :) or :'("
-                }
+                "params": [
+                    {name: "emoji", desc: "Typed emoji, like :) or :'("}
+                ]
             }
         ]
     });
@@ -111,10 +111,12 @@ backend.get("/admin/apps/running", function (req, res) {
 });
 
 backend.put("/admin/apps/running", function (req, res) {
+    console.log("got app launch:");
+    console.log(req.body);
     current_app.name = req.body.name;
     current_app.params = req.body.params;
-    current_app.start = req.body.start;
-    current_app.user = req.body.user;
+    current_app.start = new Date();
+    current_app.user = "root";
     res.json({error: 0, data: current_app});
 });
 
